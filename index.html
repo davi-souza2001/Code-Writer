@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Code Writer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css">
+  <link rel="stylesheet" href="https://codemirror.net/theme/monokai.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js"></script>
+</head>
+
+<body>
+  <h1>Code Writer with Formatting</h1>
+
+  <textarea id="editor">
+function myScript(){
+  return 200;
+}</textarea>
+
+<footer>
+  <button id="btnSalvar" onclick="salvarArquivo()">
+    Salvar Arquivo
+  </button>
+</footer>
+
+
+  <script>
+    const $myCodeMirror = CodeMirror.fromTextArea(document.querySelector('#editor'), {
+      lineNumbers: true,
+      theme: 'monokai',
+      mode: "javascript"
+    });
+
+    // Código do Electron
+    const { ipcRenderer } = require('electron');
+
+    function salvarArquivo() {
+      const conteudoDoArquivo = $myCodeMirror.getValue();
+      console.log(conteudoDoArquivo);
+
+      ipcRenderer.send('renderer/salvar_arquivo', conteudoDoArquivo);
+    }
+
+    ipcRenderer.on('main/salvar_arquivo', function(event, mensagemDaMain) {
+      console.log('Resposta da main:', mensagemDaMain);
+    })
+  </script>
+</body>
+
+</html>
